@@ -30,6 +30,17 @@ let numMoves = 0;
 
 const deck = document.querySelector(".deck");
 
+let flippedCards = []; //to hold clicked cards
+
+let clockOff = true;
+
+let time = 0;
+
+let clockId;
+
+const minutes = Math.floor(time / 60);
+const seconds = time % 60;
+
 //shuffle
 function shuffleCards() {
   const unshuffled = Array.from(document.querySelectorAll(".deck li"));
@@ -41,7 +52,7 @@ function shuffleCards() {
 
 shuffleCards();
 
-let flippedCards = []; //to hold clicked cards
+
 
 //count number of turns
 function addTurn() {
@@ -108,6 +119,27 @@ function isAGoodClick(clickCard) {
   );
 }
 
+//count game time with clock
+function keepTime() {
+  let clockId = setTimeout(() => {
+   time++;
+   displayTime(); 
+  }, 997);
+}
+
+function stopClock() {
+  clearInterval(clockId);
+}
+
+function showTime() {
+  const clock = document.querySelector('.clock');
+  if (seconds < 10) {
+clock.innerHTML = `${minutes}:0${seconds}`;
+  } else {
+    clock.innerHTML = `${minutes}:${seconds}`;
+  }
+}
+
 //flip card when clicked
 deck.addEventListener("click", event => {
   const clickCard = event.target;
@@ -122,6 +154,10 @@ deck.addEventListener("click", event => {
   if (isAGoodClick(clickCard)) {
     flipCard(clickCard);
     addClickCard(clickCard);
+    if (clockOff) {
+      keepTime();
+      clockOff = false;
+    }
     if (flippedCards.length === 2) {
       doTheyMatch(clickCard);
       addTurn();

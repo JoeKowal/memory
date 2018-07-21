@@ -26,8 +26,11 @@ function shuffle(array) {
   return array;
 }
 
+let numMoves =0;
+
 const deck = document.querySelector(".deck");
 
+//shuffle
 function shuffleCards() {
   const unshuffled = Array.from(document.querySelectorAll('.deck li'));
   const shuffled = shuffle(unshuffled);
@@ -39,6 +42,13 @@ function shuffleCards() {
 shuffleCards();
 
 let flippedCards = []; //to hold clicked cards
+
+//count number of turns
+function addTurn() {
+  numMoves++;
+  const turnText = document.querySelector('numMoves');
+  turnText.innerHTML = numMoves;
+}
 
 
 
@@ -64,6 +74,7 @@ deck.addEventListener("click", event => {
     addClickCard(clickCard);
     if (flippedCards.length === 2) {
       doTheyMatch(clickCard);
+      addTurn();
     }
   }
 });

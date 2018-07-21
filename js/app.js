@@ -32,8 +32,8 @@ const deck = document.querySelector(".deck");
 
 //flip the card
 function flipCard(clickCard) {
-  clickCard.classList.toggle('open');
-  clickCard.classList.toggle('show');
+  clickCard.classList.toggle("open");
+  clickCard.classList.toggle("show");
 }
 
 //flip card when clicked
@@ -45,20 +45,50 @@ deck.addEventListener("click", event => {
 });
 
 //add clicked cards to array
-deck.addEventListener('click', event => {
+deck.addEventListener("click", event => {
   const clickCard = event.target;
-  if (clickCard.classList.contains('card') && flippedCards.length <2) {
+  if (isAGoodClick(clickCard)) {
     flipCard(clickCard);
     addClickCard(clickCard);
+    if (flippedCards.length === 2) {
+      doTheyMatch(clickCard);
     }
   }
-);
+});
 
 //add to array
 function addClickCard(clickCard) {
   flippedCards.push(clickCard);
 }
 
+//is it a match?
+function doTheyMatch() {
+  if (
+    flippedCards[0].firstelementchild.classname ===
+    flippedCards[1].firstelementchild.classname
+  ) {
+    flippedCards[0].classlist.toggle("match");
+    flippedCards[1].classlist.toggle("match");
+    flippedCards = [];
+  } else {
+    setTimeout(() => {
+      //pause to see card here
+      flipCard(flippedCards[0]);
+      flipCard(flippedCards[1]);
+      flippedCards = [];
+    }, 1450);
+  }
+}
+
+//is this a real valid click
+function isAGoodClick(clickCard) {
+  return (
+    clickCard.classlist.contains("card") &&
+    !clickCard.classlist.contains("match") &&
+    flippedCards.length < 2 &&
+    !flippedCards.includes(clickCard)
+  );
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:

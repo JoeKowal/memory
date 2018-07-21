@@ -44,6 +44,21 @@ deck.addEventListener("click", event => {
   }
 });
 
+//add clicked cards to array
+deck.addEventListener('click', event => {
+  const clickCard = event.target;
+  if (clickCard.classList.contains('card') && flippedCards.length <2) {
+    flipCard(clickCard);
+    addClickCard(clickCard);
+    }
+  }
+);
+
+//add to array
+function addClickCard(clickCard) {
+  flippedCards.push(clickCard);
+}
+
 
 /*
  * set up the event listener for a card. If a card is clicked:

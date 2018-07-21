@@ -2,7 +2,6 @@
  * Create a list that holds all of your cards
  */
 
-
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -12,23 +11,40 @@
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
 
-    return array;
+  return array;
 }
 
+let flippedCards = []; //to hold clicked cards
 
-const deck = document.querySelector('.deck');
+const deck = document.querySelector(".deck");
 
-deck.addEventListener('click', event => {const clickCard = event.target; if (clickCard.classList.contains('card')) {clickCard.classList.toggle('open'); clickCard.classList.toggle('show');}})
+//flip the card
+function flipCard(clickCard) {
+  clickCard.classList.toggle('open');
+  clickCard.classList.toggle('show');
+}
+
+//flip card when clicked
+deck.addEventListener("click", event => {
+  const clickCard = event.target;
+  if (clickCard.classList.contains("card")) {
+    flipCard(clickCard);
+  }
+});
+
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)

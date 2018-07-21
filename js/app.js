@@ -26,9 +26,21 @@ function shuffle(array) {
   return array;
 }
 
+const deck = document.querySelector(".deck");
+
+function shuffleCards() {
+  const unshuffled = Array.from(document.querySelectorAll('.deck li'));
+  const shuffled = shuffle(unshuffled);
+  for (card of shuffled) {
+    deck.appendChild(card);
+  }
+}
+
+shuffleCards();
+
 let flippedCards = []; //to hold clicked cards
 
-const deck = document.querySelector(".deck");
+
 
 //flip the card
 function flipCard(clickCard) {

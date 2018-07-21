@@ -26,13 +26,13 @@ function shuffle(array) {
   return array;
 }
 
-let numMoves =0;
+let numMoves = 0;
 
 const deck = document.querySelector(".deck");
 
 //shuffle
 function shuffleCards() {
-  const unshuffled = Array.from(document.querySelectorAll('.deck li'));
+  const unshuffled = Array.from(document.querySelectorAll(".deck li"));
   const shuffled = shuffle(unshuffled);
   for (card of shuffled) {
     deck.appendChild(card);
@@ -46,38 +46,33 @@ let flippedCards = []; //to hold clicked cards
 //count number of turns
 function addTurn() {
   numMoves++;
-  const turnText = document.querySelector('numMoves');
+  const turnText = document.querySelector("numMoves");
   turnText.innerHTML = numMoves;
 }
 
+//too many moves = lose stars
+function takeAwayStar() {
+  const starDisplay = document.querySelectorAll(".stars li");
+  for (star of starDisplay) {
+    if (star.style.display !== "none") {
+      star.style.display = "none";
+      break;
+    }
+  }
+}
 
+//how many stars did you get?
+function countMoves() {
+  if (numMoves === 20 || numMoves === 25) {
+    takeAwayStar();
+  }
+}
 
 //flip the card
 function flipCard(clickCard) {
   clickCard.classList.toggle("open");
   clickCard.classList.toggle("show");
 }
-
-//flip card when clicked
-deck.addEventListener("click", event => {
-  const clickCard = event.target;
-  if (clickCard.classList.contains("card")) {
-    flipCard(clickCard);
-  }
-});
-
-//add clicked cards to array
-deck.addEventListener("click", event => {
-  const clickCard = event.target;
-  if (isAGoodClick(clickCard)) {
-    flipCard(clickCard);
-    addClickCard(clickCard);
-    if (flippedCards.length === 2) {
-      doTheyMatch(clickCard);
-      addTurn();
-    }
-  }
-});
 
 //add to array
 function addClickCard(clickCard) {
@@ -112,6 +107,28 @@ function isAGoodClick(clickCard) {
     !flippedCards.includes(clickCard)
   );
 }
+
+//flip card when clicked
+deck.addEventListener("click", event => {
+  const clickCard = event.target;
+  if (clickCard.classList.contains("card")) {
+    flipCard(clickCard);
+  }
+});
+
+//add clicked cards to array
+deck.addEventListener("click", event => {
+  const clickCard = event.target;
+  if (isAGoodClick(clickCard)) {
+    flipCard(clickCard);
+    addClickCard(clickCard);
+    if (flippedCards.length === 2) {
+      doTheyMatch(clickCard);
+      addTurn();
+      countMoves();
+    }
+  }
+});
 
 /*
  * set up the event listener for a card. If a card is clicked:

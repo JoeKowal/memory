@@ -4,10 +4,10 @@ let allCards = [...card];
 
 //init
 let timer;
-let openCards = []; //opened cards
+let clickedCards = []; //opened cards
 let matchedCards = []; //matched Cards
 let firstClick = null; //1st click
-let currentClick = null; //2nd click
+let secondClick = null; //2nd click
 let firstClickIcon = null; //1st click picture
 let currentClickIcon = null; //2nd click picture
 let shuffledCards;
@@ -15,7 +15,7 @@ let hours = 0;
 let minutes = 0;
 let seconds = 0;
 let timerOn = false; //no timer until first move
-let timeOutput;
+let clockTime;
 const deck = document.querySelector(".deck");
 let winStars;
 let moveCounter = 0; //# of moves
@@ -58,42 +58,42 @@ function clickedCard() {
     timerOn = true;
     setTimer();
   }
-  currentClick = event.target;
-  if (currentClick.classList.contains("match")) {
+  secondClick = event.target;
+  if (secondClick.classList.contains("match")) {
     //do nothing this card is already matched
-  } else if (currentClick.classList.contains("card")) {
+  } else if (secondClick.classList.contains("card")) {
     //show card and disable it from being clicked twice
-    currentClick.classList.add("open", "show-card", "disabled");
-    CurrentClickIcon = currentClick.lastElementChild.className;
+    secondClick.classList.add("open", "show-card", "disabled");
+    CurrentClickIcon = secondClick.lastElementChild.className;
     openedCard();
   }
 }
 
 //compare cards
 function openedCard() {
-  openCards.push(CurrentClickIcon);
-  if (openCards.length === 1) {
-    firstClick = currentClick;
+  clickedCards.push(CurrentClickIcon);
+  if (clickedCards.length === 1) {
+    firstClick = secondClick;
     firstClickIcon = CurrentClickIcon;
   }
   //2 cards = update number of moves
-  if (openCards.length === 2) {
+  if (clickedCards.length === 2) {
     updateMoves();
     //do the 2 cards match
-    if (openCards[0] === openCards[1]) {
+    if (clickedCards[0] === clickedCards[1]) {
       //if yes then match function
       isAMatch();
     } else {
       //if no then not a match function
       notAMatch();
     }
-    openCards = [];
+    clickedCards = [];
   }
 }
 
 //have all cards have been matched
 function isAMatch() {
-  currentClick.classList.add("match");
+  secondClick.classList.add("match");
   firstClick.classList.add("match");
   matchedCards.push(currentClickIcon);
   matchedCards.push(firstClickIcon);
@@ -106,7 +106,7 @@ function isAMatch() {
 function notAMatch() {
   document.querySelector(".deck").removeEventListener("click", clickedCard);
   setTimeout(function() {
-    currentClick.classList.remove("open", "show-card", "disabled");
+    secondClick.classList.remove("open", "show-card", "disabled");
     firstClick.classList.remove("open", "show-card", "disabled");
     document.querySelector(".deck").addEventListener("click", clickedCard);
   }, 600);
@@ -115,7 +115,7 @@ function notAMatch() {
 function updateMoves() {
   moveCounter++;
   document.querySelector(".moves").innerHTML = "Moves: " + moveCounter;
-  rating();
+  starRating();
 }
 
 function win() {
@@ -125,7 +125,7 @@ function win() {
     "Moves Made: " +
     moveCounter +
     "<br />" +
-    timeOutput +
+    clockTime +
     "<br />" +
     "Rating: " +
     winStars;
@@ -141,7 +141,7 @@ function reset() {
     e.children[1].style.visibility = "visible";
   moveCounter = 0;
   firstClick = null;
-  currentClick = null;
+  secondClick = null;
   seconds = 0;
   minutes = 0;
   hours = 0;
@@ -152,13 +152,13 @@ function reset() {
   let cardsEl;
   for (let i = 0; i < cards.length; i++) {
     cardsEl = cards[i].lastElementChild.className;
-    if (openCards.includes(cardsEl)) {
+    if (clickedCards.includes(cardsEl)) {
       cards[i].classList.remove("open", "show-card", "disabled");
     } else if (matchedCards.includes(cardsEl)) {
       cards[i].classList.remove("open", "show-card", "match", "disabled");
     }
   }
-  openCards = [];
+  clickedCards = [];
   matchedCards = [];
   shuffleCards();
 }
@@ -188,30 +188,30 @@ function clearTimer() {
 function timerOutput() {
   //hours
   if (hours === 1) {
-    timeOutput = "Time Taken: " + hours + " hr ";
+    clockTime = "Time Taken: " + hours + " hr ";
   } else if (hours > 1) {
-    timeOutput = "Time Taken: " + hours + " hrs ";
+    clockTime = "Time Taken: " + hours + " hrs ";
   } else if (hours === 0) {
-    timeOutput = "Time Taken: ";
+    clockTime = "Time Taken: ";
   }
   //minutes
   if (minutes === 0 && hours === 0) {
   } else if (minutes === 1) {
-    timeOutput += minutes + " min ";
+    clockTime += minutes + " min ";
   } else if (minutes != 1) {
-    timeOutput += minutes + " mins ";
+    clockTime += minutes + " mins ";
   }
   //seconds
   if (seconds === 1) {
-    timeOutput += seconds + " sec";
+    clockTime += seconds + " sec";
   } else {
-    timeOutput += seconds + " secs";
+    clockTime += seconds + " secs";
   }
-  document.querySelector(".myTimer").innerHTML = timeOutput;
+  document.querySelector(".myTimer").innerHTML = clockTime;
 }
 
 //how many stars to show
-function rating() {
+function starRating() {
   if (moveCounter < 13) {
     //3 stars
   } else if (moveCounter >= 14 && moveCounter < 18) {

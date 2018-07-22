@@ -103,6 +103,7 @@ function isAMatch() {
   }
 }
 
+//handle picks that don't match
 function notAMatch() {
   document.querySelector(".deck").removeEventListener("click", clickedCard);
   setTimeout(function() {
@@ -112,12 +113,14 @@ function notAMatch() {
   }, 600);
 }
 
+//count the moves made
 function updateMoves() {
   moveCounter++;
   document.querySelector(".moves").innerHTML = "Moves: " + moveCounter;
   starRating();
 }
 
+//game completed (won)
 function win() {
   clearTimer();
   generateWinStars();
@@ -130,6 +133,77 @@ function win() {
     "Rating: " +
     winStars;
   $("#winModal").modal("show");
+}
+
+//calculate time
+function setTimer() {
+  timer = setInterval(function() {
+    if (seconds === 60) {
+      minutes++;
+      seconds = 0;
+    }
+    if (minutes === 60) {
+      hours++;
+      minutes = 0;
+    }
+    seconds++;
+    timerOutput();
+  }, 1000);
+}
+
+//timer for scorecard
+function timerOutput() {
+  //hours
+  if (hours === 1) {
+    clockTime = "Time Taken: " + hours + " hr ";
+  } else if (hours > 1) {
+    clockTime = "Time Taken: " + hours + " hrs ";
+  } else if (hours === 0) {
+    clockTime = "Time Taken: ";
+  }
+  //minutes
+  if (minutes === 0 && hours === 0) {
+  } else if (minutes === 1) {
+    clockTime += minutes + " min ";
+  } else if (minutes != 1) {
+    clockTime += minutes + " mins ";
+  }
+  //seconds
+  if (seconds === 1) {
+    clockTime += seconds + " sec";
+  } else {
+    clockTime += seconds + " secs";
+  }
+  document.querySelector(".myTimer").innerHTML = clockTime;
+}
+
+//stop time
+function clearTimer() {
+  clearInterval(timer);
+}
+
+//how many stars
+function starRating() {
+  if (moveCounter < 13) {
+    //3 stars
+  } else if (moveCounter >= 14 && moveCounter < 18) {
+    for (let e of document.querySelectorAll(".stars"))
+      e.children[2].style.visibility = "hidden";
+  } else if (moveCounter >= 19) {
+    for (let e of document.querySelectorAll(".stars"))
+      e.children[1].style.visibility = "hidden";
+  }
+}
+
+//win screen
+function generateWinStars() {
+  if (moveCounter < 11) {
+    winStars = `<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>`;
+  } else if (moveCounter >= 11 && moveCounter < 20) {
+    winStars = `<i class="fa fa-star"></i><i class="fa fa-star"></i>`;
+  } else if (moveCounter >= 20) {
+    winStars = `<i class="fa fa-star"></i>`;
+  }
 }
 
 //reset the game
@@ -161,75 +235,4 @@ function reset() {
   clickedCards = [];
   matchedCards = [];
   shuffleCards();
-}
-
-//calculate time
-function setTimer() {
-  timer = setInterval(function() {
-    if (seconds === 60) {
-      minutes++;
-      seconds = 0;
-    }
-    if (minutes === 60) {
-      hours++;
-      minutes = 0;
-    }
-    seconds++;
-    timerOutput();
-  }, 1000);
-}
-
-//stop time
-function clearTimer() {
-  clearInterval(timer);
-}
-
-//timer for scorecard
-function timerOutput() {
-  //hours
-  if (hours === 1) {
-    clockTime = "Time Taken: " + hours + " hr ";
-  } else if (hours > 1) {
-    clockTime = "Time Taken: " + hours + " hrs ";
-  } else if (hours === 0) {
-    clockTime = "Time Taken: ";
-  }
-  //minutes
-  if (minutes === 0 && hours === 0) {
-  } else if (minutes === 1) {
-    clockTime += minutes + " min ";
-  } else if (minutes != 1) {
-    clockTime += minutes + " mins ";
-  }
-  //seconds
-  if (seconds === 1) {
-    clockTime += seconds + " sec";
-  } else {
-    clockTime += seconds + " secs";
-  }
-  document.querySelector(".myTimer").innerHTML = clockTime;
-}
-
-//how many stars to show
-function starRating() {
-  if (moveCounter < 13) {
-    //3 stars
-  } else if (moveCounter >= 14 && moveCounter < 18) {
-    for (let e of document.querySelectorAll(".stars"))
-      e.children[2].style.visibility = "hidden";
-  } else if (moveCounter >= 19) {
-    for (let e of document.querySelectorAll(".stars"))
-      e.children[1].style.visibility = "hidden";
-  }
-}
-
-//code to show on win screen
-function generateWinStars() {
-  if (moveCounter < 11) {
-    winStars = `<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>`;
-  } else if (moveCounter >= 11 && moveCounter < 20) {
-    winStars = `<i class="fa fa-star"></i><i class="fa fa-star"></i>`;
-  } else if (moveCounter >= 20) {
-    winStars = `<i class="fa fa-star"></i>`;
-  }
 }
